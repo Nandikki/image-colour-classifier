@@ -1,7 +1,0 @@
-Flask @ file:///home/ktietz/src/ci/flask_1611932660458/work
-Flask-Cors==5.0.0
-joblib @ file:///tmp/build/80754af9/joblib_1635411271373/work
-numpy @ file:///C:/ci/numpy_and_numpy_base_1649782970434/work
-numpydoc @ file:///opt/conda/conda-bld/numpydoc_1643788541039/work
-Pillow==9.0.1
-gunicorn==21.2.0
