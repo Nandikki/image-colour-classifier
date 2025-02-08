@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[4]:
-
-
 from PIL import Image
 import numpy as np
 import joblib
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from io import BytesIO
 import warnings
 from flask_cors import CORS
@@ -17,7 +14,7 @@ warnings.simplefilter(action='ignore', category=UserWarning)
 
 app = Flask(__name__)
 
-# Enable CORS for the entire app
+# Enabling CORS
 CORS(app)
 
 
@@ -25,13 +22,13 @@ CORS(app)
 model = joblib.load("knn_a_color_model.pkl")
 
 def image_to_rgb_array(image_data):
-    # Open the image from the byte data
+    # Openning the image
     img = Image.open(BytesIO(image_data)).convert("RGB")  # Ensure it's in RGB mode
     
-    # Convert the image to a NumPy array
+    # Converting to numpy array
     rgb_array = np.array(img, dtype=np.uint8)  # Ensure correct data type
     
-    return rgb_array.tolist()  # Convert to a list if needed
+    return rgb_array.tolist()  
 
 def get_dominant_colour(image_path):
     image_path = image_path
@@ -43,6 +40,10 @@ def get_dominant_colour(image_path):
     #print(colours)
     
     return f"{max(set(colours), key=colours.count)}"
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
@@ -59,7 +60,6 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-# In[ ]:
 
 
 
