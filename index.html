@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        #image-preview {
+            margin-top: 20px;
+            max-width: 100%;
+            height: auto;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        #result {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Image Color Classifier</h1>
+        <input type="file" id="image-input" accept="image/*">
+        <img id="image-preview" src="" alt="Image Preview" style="display:none;">
+        <button onclick="analyzeImage()">Analyze</button>
+        <div id="result"></div>
+    </div>
+    
+    <script>
+document.getElementById('image-input').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('image-preview').src = e.target.result;
+            document.getElementById('image-preview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function analyzeImage() {
+    const fileInput = document.getElementById('image-input');
+    if (fileInput.files.length === 0) {
+        alert("Please upload an image.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", fileInput.files[0]);
+
+    fetch("http://127.0.0.1:5000/analyze", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result').innerText = "Dominant Color: " + data.dominant_color;
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById('result').innerText = "Error processing image.";
+    });
+}
+</script>
+
+</body>
+</html>
